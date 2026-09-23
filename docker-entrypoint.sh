@@ -91,11 +91,16 @@ shutdown() {
 trap shutdown TERM INT EXIT
 
 if is_true "${ENABLE_CODE_SERVER}"; then
-    if [[ -z "${PASSWORD:-}" && -z "${HASHED_PASSWORD:-}" ]]; then
-        echo "PASSWORD or HASHED_PASSWORD is required when code-server is enabled" >&2
+    if [[ -z "${CODE_SERVER_PASSWORD:-}" && -z "${CODE_SERVER_HASHED_PASSWORD:-}" ]]; then
+        echo "CODE_SERVER_PASSWORD or CODE_SERVER_HASHED_PASSWORD is required when code-server is enabled" >&2
         exit 1
     fi
     start_process code-server \
+        env \
+        -u CODE_SERVER_PASSWORD \
+        -u CODE_SERVER_HASHED_PASSWORD \
+        PASSWORD="${CODE_SERVER_PASSWORD:-}" \
+        HASHED_PASSWORD="${CODE_SERVER_HASHED_PASSWORD:-}" \
         gosu "${dev_user}" code-server \
         --bind-addr "0.0.0.0:${CODE_SERVER_PORT}" \
         --auth password \
