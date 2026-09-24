@@ -114,7 +114,7 @@ if is_true "${ENABLE_OPENCODE}"; then
         exit 1
     fi
     start_process opencode \
-        gosu "${dev_user}" opencode web \
+        gosu "${dev_user}" opencode serve \
         --hostname 0.0.0.0 \
         --port "${OPENCODE_PORT}"
 fi

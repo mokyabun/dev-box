@@ -17,7 +17,21 @@ if is_true "${ENABLE_CODE_SERVER:-true}"; then
 fi
 
 if is_true "${ENABLE_OPENCODE:-true}"; then
-    check_http "http://127.0.0.1:${OPENCODE_PORT:-4096}/"
+    opencode_username="${OPENCODE_SERVER_USERNAME:-opencode}"
+    opencode_url="http://127.0.0.1:${OPENCODE_PORT:-4096}/api/info"
+
+    if curl --silent --fail --output /dev/null --max-time 3 \
+        --user "${opencode_username}:${OPENCODE_SERVER_PASSWORD:?}" \
+        "${opencode_url}"; then
+        :
+    elif [[ "${opencode_username}" != opencode ]]; then
+        # OpenCode v2 currently ignores a custom OPENCODE_SERVER_USERNAME.
+        curl --silent --show-error --fail --output /dev/null --max-time 3 \
+            --user "opencode:${OPENCODE_SERVER_PASSWORD}" \
+            "${opencode_url}"
+    else
+        exit 1
+    fi
 fi
 
 if is_true "${ENABLE_SSH:-true}"; then
