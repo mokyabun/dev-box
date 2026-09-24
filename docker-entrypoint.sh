@@ -109,8 +109,8 @@ if is_true "${ENABLE_CODE_SERVER}"; then
 fi
 
 if is_true "${ENABLE_OPENCODE}"; then
-    if [[ -z "${OPENCODE_SERVER_PASSWORD:-}" ]]; then
-        echo "OPENCODE_SERVER_PASSWORD is required when OpenCode is enabled" >&2
+    if [[ -z "${OPENCODE_PASSWORD:-}" ]]; then
+        echo "OPENCODE_PASSWORD is required when OpenCode is enabled" >&2
         exit 1
     fi
     start_process opencode \
